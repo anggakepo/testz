@@ -26,113 +26,13 @@ const games = {
         promoId: 'c4480ac7-e178-4973-8061-9ed5b2e17954',
         interval: 120,
         eventCount: 1,
-    },
-    5: {
-        name: 'Merge Away',
-        appToken: '8d1cc2ad-e097-4b86-90ef-7a27e19fb833',
-        promoId: 'dc128d28-c45b-411c-98ff-ac7726fbaea4',
-        interval: 21,
-        eventCount: 7,
-    },
-    6 : {
-        name: 'TwerkRace',
-        appToken: '61308365-9d16-4040-8bb0-2f4a4c69074c',
-        promoId: '61308365-9d16-4040-8bb0-2f4a4c69074c',
-        interval: 20,
-        eventCount: 10,
-    },
-    7 : {
-        name: 'Polysphere',
-        appToken: '2aaf5aee-2cbc-47ec-8a3f-0962cc14bc71',
-        promoId: '2aaf5aee-2cbc-47ec-8a3f-0962cc14bc71',
-        interval: 20,
-        eventCount: 16,
-    },
-    8 : {
-        name: 'Mow and Trim',
-        appToken: 'ef319a80-949a-492e-8ee0-424fb5fc20a6',
-        promoId: 'ef319a80-949a-492e-8ee0-424fb5fc20a6',
-        interval: 20,
-        eventCount: 10,
-    },
-    9 : {
-        name: 'Mud Racing',
-        appToken: '8814a785-97fb-4177-9193-ca4180ff9da8',
-        promoId: '8814a785-97fb-4177-9193-ca4180ff9da8',
-        interval: 20,
-        eventCount: 10,
-    },
-    10 : {
-        name: 'Cafe Dash',
-        appToken: 'bc0971b8-04df-4e72-8a3e-ec4dc663cd11',
-        promoId: 'bc0971b8-04df-4e72-8a3e-ec4dc663cd11',
-        interval: 20,
-        eventCount: 16,
-    },
-    11 : {
-        name: 'Gangs Wars',
-        appToken: 'b6de60a0-e030-48bb-a551-548372493523',
-        promoId: 'c7821fa7-6632-482c-9635-2bd5798585f9',
-        interval: 20,
-        eventCount: 16,
-    },
-    12 : {
-        name: 'Zoopolis',
-        appToken: 'b2436c89-e0aa-4aed-8046-9b0515e1c46b',
-        promoId: 'b2436c89-e0aa-4aed-8046-9b0515e1c46b',
-        interval: 20,
-        eventCount: 7,
-    },
-    13 : {
-        name: 'Tile Trio',
-        appToken: 'e68b39d2-4880-4a31-b3aa-0393e7df10c7',
-        promoId: 'e68b39d2-4880-4a31-b3aa-0393e7df10c7',
-        interval: 20,
-        eventCount: 5,
-    },
-    14 : {
-        name: 'Fluff Crusade',
-        appToken: '112887b0-a8af-4eb2-ac63-d82df78283d9',
-        promoId: '112887b0-a8af-4eb2-ac63-d82df78283d9',
-        interval: 120,
-        eventCount: 1,
-    },
-    15 : {
-        name: 'Stone Age',
-        appToken: '04ebd6de-69b7-43d1-9c4b-04a6ca3305af',
-        promoId: '04ebd6de-69b7-43d1-9c4b-04a6ca3305af',
-        interval: 31,
-        eventCount: 5,
-    },
-    16 : {
-        name: 'Bouncemasters',
-        appToken: 'bc72d3b9-8e91-4884-9c33-f72482f0db37',
-        promoId: 'bc72d3b9-8e91-4884-9c33-f72482f0db37',
-        interval: 61,
-        eventCount: 1,
-    },
-    17 : {
-        name: 'Hide Ball',
-        appToken: '4bf4966c-4d22-439b-8ff2-dc5ebca1a600',
-        promoId: '4bf4966c-4d22-439b-8ff2-dc5ebca1a600',
-        interval: 10,
-        eventCount: 17,
     }
+    // You can add more games if you have more
 };
 
 function generateClientId() {
     return crypto.randomUUID();
-    //
-    // const timestamp = Date.now();
-    // const randomNumbers = [];
-    //
-    // for (let i = 0; i < 19; i++) {
-    //     randomNumbers.push(Math.floor(Math.random() * 10));
-    // }
-    //
-    // return `${timestamp}-${randomNumbers.join('')}`;
 }
-
 
 async function loginClient(gameNumber) {
     const clientId = generateClientId();
@@ -238,7 +138,7 @@ async function createCode(token, gameNumber) {
         } catch (error) {
             console.error('Fatal error:', error.message);
         }
-    } while (!response || !response.promoCode); // Повторяем запрос, если ничего не возвращает
+    } while (!response || !response.promoCode);
 }
 
 function generateRandomUUID() {
@@ -275,7 +175,7 @@ async function generate() {
 
     const tasks = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 100; i++) { // Changed from 4 to 100 keys
         tasks.push((async (index) => {
             try {
                 let token = await loginClient(selectedGame);
@@ -296,9 +196,16 @@ async function generate() {
 
     keyBlock.style.display = 'flex';
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 100; i++) { // Displaying 100 keys
         let keyValue = document.getElementById('keys-value-' + (i + 1));
-        keyValue.innerText = codes[i];
+        if (keyValue) {
+            keyValue.innerText = codes[i];
+        } else {
+            const newKeyValue = document.createElement('div');
+            newKeyValue.id = 'keys-value-' + (i + 1);
+            newKeyValue.innerText = codes[i];
+            keyBlock.appendChild(newKeyValue);
+        }
     }
 
     generateButton.style.display = 'block';
@@ -348,47 +255,24 @@ async function copyCode(codeId, button) {
         let content = '';
 
         if (codeId === 'all') {
-            let codesInput = ['keys-value-1', 'keys-value-2', 'keys-value-3', 'keys-value-4'];
-
-            codesInput.forEach(function (keyId) {
-                content += document.getElementById(keyId).textContent + '\n';
-            });
-
-            content = content.slice(0, -1); // remove last '\n'
+            let codesInput = [];
+            for (let i = 0; i < 100; i++) {
+                const code = document.getElementById('keys-value-' + (i + 1));
+                if (code && code.innerText) {
+                    codesInput.push(code.innerText);
+                }
+            }
+            content = codesInput.join('\n');
         } else {
-            content = document.getElementById(codeId).textContent;
+            const code = document.getElementById('keys-value-' + codeId);
+            content = code.innerText;
         }
 
         await navigator.clipboard.writeText(content);
 
-        const toast = document.getElementById('toast');
-
-        const buttonRect = button.getBoundingClientRect();
-        toast.style.left = `${buttonRect.left + window.scrollX - 10}px`;
-        toast.style.top = `${buttonRect.top - toast.offsetHeight + window.scrollY}px`;
-
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000); // Hide after 2 seconds
-    } catch (error) {
-        console.error('Failed to copy content: ', error);
+        button.classList.add('check');
+        setTimeout(() => button.classList.remove('check'), 1000);
+    } catch (err) {
+        console.error('Failed to copy: ', err);
     }
 }
-
-async function clickCopyAll() {
-    let copyAll = document.getElementById('copy-all');
-
-    const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-    });
-
-    copyAll.dispatchEvent(event);
-
-    // copyAll.click() // not working
-}
-
-
-generateButton.addEventListener('click', generate);
-
-updateGenerateTime(gameSelect)
